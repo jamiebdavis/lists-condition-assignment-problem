@@ -6,25 +6,37 @@ import CharComponent from "./CharComponent/CharComponent";
 class App extends Component {
   state = {
     string: "",
-    stringLength: 0
+    stringLength: 0,
+    stringArr: []
   };
   handleChange = event => {
-    //this.setState({ string: event.target.value });
-    //console.log(event.target.value);
-    //console.log(event.target.value.length);
     this.setState({
       string: event.target.value,
-      stringLength: event.target.value.length
+      stringLength: event.target.value.length,
+      stringArr: this.state.string.split("")
     });
+    console.log(this.state);
+  };
+
+  deleteLetter = index => {
+    const string = this.state.string.split("");
+    string.splice(index, 1);
+
+    const updatedString = string.join("");
+    this.setState({ string: updatedString });
   };
 
   render() {
     const stringMap = this.state.string.split("");
     const stringArr = stringMap.map((char, index) => {
-      return <CharComponent key={index} letter={char} />;
+      return (
+        <CharComponent
+          key={index}
+          letter={char}
+          clicked={() => this.deleteLetter(index)}
+        />
+      );
     });
-
-    //deleteLetter = () => {};
 
     return (
       <div className="App">
@@ -36,7 +48,11 @@ class App extends Component {
         </ol>
         <p>Hint: Keep in mind that JavaScript strings are basically arrays!</p>
 
-        <input type="text" onChange={this.handleChange} />
+        <input
+          type="text"
+          onChange={this.handleChange}
+          value={this.state.string}
+        />
         <p>{this.state.stringLength}</p>
         <ValidationComponent textLength={this.state.stringLength} />
         {stringArr}
